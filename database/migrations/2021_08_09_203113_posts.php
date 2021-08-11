@@ -17,7 +17,7 @@ class Posts extends Migration
             $table->id()->autoIncrement();
             $table->string('titulo', 100);
             $table->string('slug', 100)->unique();
-            $table->text('description')->nullable();
+            $table->text('descripcion')->nullable();
             $table->dateTime('created', $precision = 0);
             $table->dateTime('modified', $precision = 0);
         });
