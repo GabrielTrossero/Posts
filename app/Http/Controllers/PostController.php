@@ -12,4 +12,10 @@ class PostController extends Controller
     {
         return view('post.index');
     }
+
+    public function create()
+    {
+        //redirijo a la vista para agregar un post
+        return view('post.create');
+    }
 }

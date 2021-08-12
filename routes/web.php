@@ -18,6 +18,6 @@ use App\Http\Controllers\PostController;
 //    return view('welcome');
 //});
 
-Route::get('/index', 'PostController@index');
-//Route::get('create', 'PostController@create');
-//Route::post('create', 'PostController@store');
+Route::get('/', 'PostController@index');
+Route::get('create', 'PostController@create');
+Route::post('create', 'PostController@store');
