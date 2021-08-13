@@ -15,11 +15,11 @@ class Posts extends Migration
     {
         Schema::create('post', function (Blueprint $table) {
             $table->id()->autoIncrement();
-            $table->string('titulo', 100);
-            $table->string('slug', 100)->unique();
+            $table->string('titulo', 150);
+            $table->string('slug', 150)->unique();
             $table->text('descripcion')->nullable();
-            $table->dateTime('created', $precision = 0);
-            $table->dateTime('modified', $precision = 0);
+            $table->dateTime('created', $precision = 0)->useCurrent();
+            $table->dateTime('modified', $precision = 0)->useCurrentOnUpdate()->nullable();
         });
     }
 

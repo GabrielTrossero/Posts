@@ -8,7 +8,7 @@
     <div class="card-header row"> <!--row me permite mantener los dos label en la misma linea-->
         <label class="col-md-10 col-form-label"><b>Listado de Posts</b></label>
         <label class="col-md-2 col-form-label">
-        <a style="text-decoration:none" href="{{ url('/') }}">
+        <a style="text-decoration:none" href="{{ url('/create') }}">
             <button type="button" class="btn btn-success" style="display:inline">
                 Agregar Post
             </button>
@@ -22,79 +22,18 @@
                 <th>Título</th>
                 <th>Fecha de Creación</th>
                 <th>Descripción</th>
+                <th>Más Información</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
-            <tr>
-                <td>Las PC de la nueva generación</td>
-                <td>27/05/21</td>
-                <td>Como cada día, las PC avanzan a pasos gigantados, esto gracias a ...</td>
-            </tr>
-            <tr>
-                <td>Programar fácil</td>
-                <td>20/11/20</td>
-                <td>Quieres programar de forma fácil? Entonces empezemos ...</td>
-            </tr>
+            @foreach($posts as $post)
+                <tr>
+                    <td>{{ $post->titulo }}</td>
+                    <td>{{ $post->created }}</td>
+                    <td>{{ $post->descripcion }}</td>
+                    <td><a href="{{ url('/persona/show/'.$post->id) }}"> <i class="bi bi-plus-lg"></i></a> </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
