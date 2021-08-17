@@ -21,3 +21,4 @@ use App\Http\Controllers\PostController;
 Route::get('/', 'PostController@index');
 Route::get('create', 'PostController@create');
 Route::post('create', 'PostController@store');
+Route::get('show/{id}', 'PostController@getShowId');

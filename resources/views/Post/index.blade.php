@@ -29,9 +29,9 @@
             @foreach($posts as $post)
                 <tr>
                     <td>{{ $post->titulo }}</td>
-                    <td>{{ $post->created }}</td>
+                    <td>{{date("d/m/Y H:i:s", strtotime($post->created)) }}</td>
                     <td>{{ $post->descripcion }}</td>
-                    <td><a href="{{ url('/persona/show/'.$post->id) }}"> <i class="bi bi-plus-lg"></i></a> </td>
+                    <td><a href="{{ url('/show/'.$post->slug) }}"> <i class="bi bi-plus-lg"></i></a> </td>
                 </tr>
             @endforeach
         </tbody>

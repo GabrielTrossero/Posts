@@ -56,4 +56,13 @@ class PostController extends Controller
         //redirijo para mostrar el mueble ingresado
         return redirect()->action('PostController@index');
     }
+
+    public function getShowId($slug)
+    {
+        //busco el post
+        $post = Post::where('slug', $slug)->first();
+
+        //redirijo a la vista individual con los datos del post
+        return view('post.show' , ['post' => $post]);
+    }
 }
