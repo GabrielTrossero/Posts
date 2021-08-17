@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Post;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -14,6 +15,11 @@ class PostController extends Controller
     {
         //busco todos los post
         $posts = Post::all();
+
+        //cambio las fechas de formato
+        foreach ($posts as $post) {
+            $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
+        }
 
         //redirijo a la vista para listar todos los post pasandole el array "post"
         return view('post.index' , compact('posts'));
@@ -67,6 +73,11 @@ class PostController extends Controller
         //busco el post
         $post = Post::where('slug', $slug)->first();
 
+        //cambio las fechas de formato
+        $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
+        if ($post->modified) {
+            $post->modified = Carbon::parse($post->modified)->format('d-m-Y H:i:s');
+        }
         //redirijo a la vista individual con los datos del post
         return view('post.show' , ['post' => $post]);
     }
@@ -121,5 +132,15 @@ class PostController extends Controller
 
         //redirijo para mostrar el post actualizado
         return redirect()->action('PostController@getShowId', $request->slug);
+    }
+
+
+    public function destroy(Request $request)
+    {
+        //elimino el registro con tal id
+        $post = post::destroy($request->id);
+
+        //redirijo al listado
+        return redirect()->action('PostController@index');
     }
 }

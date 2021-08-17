@@ -9,7 +9,11 @@
       <h6 class="card-subtitle mb-2 text-muted">{{ $post->slug }}</h6>
       <p class="card-text">{!! nl2br($post->descripcion) !!}</p>
       <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Creación: ' . $post->created }}</h6>
-      <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Modificación: ' .$post->modified }}</h6>
+      @if ($post->modified)
+        <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Modificación: ' .$post->modified }}</h6>
+      @else
+        <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Modificación: Sin modificar' }}</h6>
+      @endif
       
       <div class="row">
         <div class="col-sm-1">
@@ -28,7 +32,7 @@
           &nbsp;&nbsp;
           <form action="{{ url('/delete') }}" method="post" style="display:inline">
             {{ csrf_field() }}
-            <input type="hidden" name="id" value="{{ $post->slug }}">
+            <input type="hidden" name="id" value="{{ $post->id }}">
             <button type="submit" class="btn btn-outline-danger" style="display:inline">
               Eliminar Post
             </button>

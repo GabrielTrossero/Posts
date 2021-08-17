@@ -24,3 +24,4 @@ Route::post('create', 'PostController@store');
 Route::get('show/{id}', 'PostController@getShowId');
 Route::get('edit/{id}', 'PostController@edit');
 Route::post('edit', 'PostController@update');
+Route::post('delete', 'PostController@destroy');
