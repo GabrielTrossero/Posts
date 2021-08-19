@@ -5,6 +5,12 @@
 <div class="cuadro">
   <div class="card">
     <div class="card-body">
+      @if (Session::has('danger'))
+          <div class="alert alert-danger alert-dismissible fade show">
+            {{ Session::get('danger') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      @endif
       @if (Session::has('alert'))
           <div class="alert alert-success alert-dismissible fade show">
             {{ Session::get('alert') }}

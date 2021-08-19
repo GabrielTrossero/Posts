@@ -9,9 +9,9 @@ use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use App\Models\Post;
 
-class PostController extends Controller
+class ApiPostController extends Controller
 {
-    public function index()
+    public function list()
     {
         //busco todos los post
         $posts = Post::all();
@@ -21,19 +21,11 @@ class PostController extends Controller
             $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
         }
 
-        //redirijo a la vista para listar todos los post pasandole el array "post"
-        return view('post.index' , compact('posts'));
+        return response()->json($posts);
     }
 
 
-    public function create()
-    {
-        //redirijo a la vista para agregar un post
-        return view('post.create');
-    }
-
-
-    public function store(Request $request){
+    public function create(Request $request){
         //mensajes de error que se mostraran por pantalla
         $messages = [
             'titulo.required' => 'Es necesario ingresar un Título.',
@@ -52,44 +44,32 @@ class PostController extends Controller
             'descripcion' => 'required|max:10000'
         ], $messages);
 
-        //si la validacion falla vuelvo hacia atras con los errores
+        //si la validacion falla devuelvo error
         if($validacion->fails()){
-            return redirect()->back()->withInput()->withErrors($validacion->errors());
+            if ($validacion->errors()->first('titulo')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('titulo')
+                ], 400);
+            }
+            elseif ($validacion->errors()->first('slug')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('slug')
+                ], 400);
+            }
+            elseif ($validacion->errors()->first('descripcion')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('descripcion')
+                ], 400);
+            }
         }
 
         //almaceno el post
         $post = new Post();
         $post->create($request->all());
 
-        $postRetornado = Post::where('slug', $request->slug)->first();
-
-        //redirijo para mostrar el post ingresado
-        return redirect()->action('PostController@getShowId', $postRetornado->slug)->with('alert', 'Post generado correctamente');;
-    }
-
-
-    public function getShowId($slug)
-    {
-        //busco el post
-        $post = Post::where('slug', $slug)->first();
-
-        //cambio las fechas de formato
-        $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
-        if ($post->modified) {
-            $post->modified = Carbon::parse($post->modified)->format('d-m-Y H:i:s');
-        }
-        //redirijo a la vista individual con los datos del post
-        return view('post.show' , ['post' => $post]);
-    }
-
-
-    public function edit($slug)
-    {
-        //busco el registro
-        $post = Post::where('slug', $slug)->first();
-
-        //redirijo al formulario de edicion con los datos del post
-        return view('post.edit' , ['post' => $post]);
+        return response()->json([
+            'message' => 'Post creado correctamente'
+        ], 201);
     }
 
 
@@ -119,27 +99,42 @@ class PostController extends Controller
             'descripcion' => 'required|max:10000'
         ], $messages);
 
-        //si la validacion falla con el id, vuelvo hacia atras
-        if($validacion->errors()->first('id')){
-            return redirect()->back()->with('danger', 'ERROR: El Post no se pudo actualizar');
-        }
-
-        //si la validacion falla con otro campo, vuelvo hacia atras con los errores
+        //si la validacion falla devuelvo error
         if($validacion->fails()){
-            return redirect()->back()->withInput()->withErrors($validacion->errors());
+            if ($validacion->errors()->first('id')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('id')
+                ], 400);
+            }
+            elseif ($validacion->errors()->first('titulo')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('titulo')
+                ], 400);
+            }
+            elseif ($validacion->errors()->first('slug')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('slug')
+                ], 400);
+            }
+            elseif ($validacion->errors()->first('descripcion')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('descripcion')
+                ], 400);
+            }
         }
 
         //actualizo el post
         Post::where('id', $request->id)
-              ->update([
+            ->update([
                 'titulo' => $request->titulo,
                 'slug' => $request->slug,
                 'descripcion' => $request->descripcion
-              ]);
+            ]);
 
 
-        //redirijo para mostrar el post actualizado
-        return redirect()->action('PostController@getShowId', $request->slug)->with('alert', 'Post actualizado correctamente');
+        return response()->json([
+            'message' => 'Post actualizado correctamente'
+        ], 201);
     }
 
 
@@ -156,15 +151,20 @@ class PostController extends Controller
             'id' => 'required|exists:post'
         ], $messages);
 
-        //si la validacion falla vuelvo hacia atras con los errores
+        //si la validacion falla devuelvo error
         if($validacion->fails()){
-            return redirect()->back()->with('danger', 'ERROR: El Post no se pudo eliminar');
+            if ($validacion->errors()->first('id')) {
+                return response()->json([
+                    'message' => $validacion->errors()->first('id')
+                ], 400);
+            }
         }
 
         //elimino el registro con tal id
         $post = post::destroy($request->id);
 
-        //redirijo al listado
-        return redirect()->action('PostController@index')->with('alert', 'Post eliminado correctamente');
+        return response()->json([
+            'message' => 'Post eliminado correctamente'
+        ], 201);
     }
 }
