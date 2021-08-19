@@ -5,7 +5,13 @@
 <div class="cuadro">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{{ $post->titulo }}</h5>
+      @if (Session::has('alert'))
+          <div class="alert alert-success alert-dismissible fade show">
+            {{ Session::get('alert') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      @endif
+      <h5 class="card-title text-success">{{ $post->titulo }}</h5>
       <h6 class="card-subtitle mb-2 text-muted">{{ $post->slug }}</h6>
       <p class="card-text">{!! nl2br($post->descripcion) !!}</p>
       <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Creación: ' . $post->created }}</h6>
@@ -30,7 +36,7 @@
             </button>
           </a>
           &nbsp;&nbsp;
-          <form action="{{ url('/delete') }}" method="post" style="display:inline">
+          <form action="{{ url('/delete') }}" method="post" style="display:inline" onsubmit="return confirm('¿Está seguro que desea eliminar el Post?');">
             {{ csrf_field() }}
             <input type="hidden" name="id" value="{{ $post->id }}">
             <button type="submit" class="btn btn-outline-danger" style="display:inline">

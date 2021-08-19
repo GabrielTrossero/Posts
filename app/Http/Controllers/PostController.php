@@ -64,7 +64,7 @@ class PostController extends Controller
         $postRetornado = Post::where('slug', $request->slug)->first();
 
         //redirijo para mostrar el post ingresado
-        return redirect()->action('PostController@getShowId', $postRetornado->slug);
+        return redirect()->action('PostController@getShowId', $postRetornado->slug)->with('alert', 'Post generado correctamente');;
     }
 
 
@@ -131,7 +131,7 @@ class PostController extends Controller
 
 
         //redirijo para mostrar el post actualizado
-        return redirect()->action('PostController@getShowId', $request->slug);
+        return redirect()->action('PostController@getShowId', $request->slug)->with('alert', 'Post actualizado correctamente');
     }
 
 
@@ -141,6 +141,6 @@ class PostController extends Controller
         $post = post::destroy($request->id);
 
         //redirijo al listado
-        return redirect()->action('PostController@index');
+        return redirect()->action('PostController@index')->with('alert', 'Post eliminado correctamente');
     }
 }

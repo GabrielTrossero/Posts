@@ -5,7 +5,7 @@
 
         <ul class="navbar-nav mx-4">
             <li class="d-flex">
-                <a class="nav-link" href="{{ url('/') }}">CONTACTO</a>
+                <a class="nav-link" href="{{ url('/contact') }}">CONTACTO</a>
             </li>
         </ul>
 </nav>
