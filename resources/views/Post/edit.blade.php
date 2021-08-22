@@ -9,10 +9,17 @@
                 <div class="card-header">{{ __('Modificar Post') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('/edit') }}">
+                    <form method="POST" action="{{ url('/edit') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <input type="hidden" name="id" value="{{ $post->id }}">
+
+                        <!--para saber si el deleteImagen debe ser required-->
+                        @if ($post->imagen)
+                            <input type="hidden" name="selectIsRequired" value="true">
+                        @else
+                            <input type="hidden" name="selectIsRequired" value="false">
+                        @endif
 
                         @if (Session::has('danger'))
                             <div class="alert alert-danger alert-dismissible fade show">
@@ -53,6 +60,39 @@
                                 </div>
                             @endif
                         </div>
+                        
+                        @if ($post->imagen)
+                            <div class="form-group row mb-3 mx-5">
+                                <div class="col-md-2">
+                                    <img src="{{ asset ('/storage/'. $post->imagen) }}" width="100" height="100">
+                                </div>
+                                <div class="col-md-10 py-4">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="deleteImagen" name="deleteImagen" aria-label="Floating label select example">
+                                            <option value="false" selected>No</option>
+                                            <option value="true">Sí</option>
+                                        </select>
+                                        <label for="floatingSelect">Eliminar imagen actual</label>
+                                    </div>
+                                </div>
+
+                                @if ($errors->first('deleteImagen'))
+                                    <div class="alert alert-danger errorForm">
+                                        {{ $errors->first('deleteImagen') }}
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
+                        <div class="mb-3 mx-5">
+                            <input type="file" class="form-control" name="imagen" id="imagen" style="display:none;">
+
+                            @if ($errors->first('imagen'))
+                                <div class="alert alert-danger errorForm">
+                                    {{ $errors->first('imagen') }}
+                                </div>
+                            @endif
+                        </div>
 
                         <div class="form-group row">
                             <div class="offset-md-4 col-md-2">
@@ -75,5 +115,9 @@
         </div>
     </div>
 </div>
+
+
+<!-- Script para filtrar habilitar los input montoInteresGrupoFamiliar y cantidadIntegrantes -->
+<script src="{{ asset('js/editar-post.js') }}"></script>
 
 @stop

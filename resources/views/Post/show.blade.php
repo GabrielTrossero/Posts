@@ -19,7 +19,13 @@
       @endif
       <h5 class="card-title text-success">{{ $post->titulo }}</h5>
       <h6 class="card-subtitle mb-2 text-muted">{{ $post->slug }}</h6>
+      @if ($post->imagen)
+          <img style="float:left" class="p-2" src="{{ asset ('/storage/'. $post->imagen) }}" width="200" height="200">
+      @endif
       <p class="card-text">{!! nl2br($post->descripcion) !!}</p>
+
+      <div style="clear:both"></div>
+      
       <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Creación: ' . $post->created }}</h6>
       @if ($post->modified)
         <h6 class="card-subtitle mb-2 text-muted text-end">{{ 'Fecha de Modificación: ' .$post->modified }}</h6>

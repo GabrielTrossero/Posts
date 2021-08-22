@@ -14,6 +14,6 @@ class Post extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'titulo', 'slug', 'descripcion', 'created', 'modified'
+        'titulo', 'slug', 'descripcion', 'imagen', 'created', 'modified'
     ];
 }

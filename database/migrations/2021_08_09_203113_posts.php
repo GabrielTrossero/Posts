@@ -18,6 +18,7 @@ class Posts extends Migration
             $table->string('titulo', 150);
             $table->string('slug', 150)->unique();
             $table->text('descripcion')->nullable();
+            $table->string('imagen', 150)->nullable();
             $table->dateTime('created', $precision = 0)->useCurrent();
             $table->dateTime('modified', $precision = 0)->useCurrentOnUpdate()->nullable();
         });

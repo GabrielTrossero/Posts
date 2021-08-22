@@ -9,7 +9,7 @@
                 <div class="card-header">{{ __('Agregar Post') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('/create') }}">
+                    <form method="POST" action="{{ url('/create') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-floating mb-3 mx-5">
@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="form-floating mb-3 mx-5">
-                            <input type="slug" class="form-control" name="slug" id="slug" value="{{ old('slug') }}" placeholder="Ingrese Slug" maxlength="150" required>
+                            <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}" placeholder="Ingrese Slug" maxlength="150" required>
                             <label for="floatingInput">{{ __('Slug') }}</label>
 
                             @if ($errors->first('slug'))
@@ -41,6 +41,16 @@
                             @if ($errors->first('descripcion'))
                                 <div class="alert alert-danger errorForm">
                                     {{ $errors->first('descripcion') }}
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="mb-3 mx-5">
+                            <input type="file" class="form-control" name="imagen" id="imagen">
+
+                            @if ($errors->first('imagen'))
+                                <div class="alert alert-danger errorForm">
+                                    {{ $errors->first('imagen') }}
                                 </div>
                             @endif
                         </div>
