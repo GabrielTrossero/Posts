@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Traits\Image;
 use App\Models\Post;
 
 class ApiPostController extends Controller
@@ -72,7 +73,7 @@ class ApiPostController extends Controller
 
         //si ingresó imagen
         if ($request->hasFile('imagen')) {
-            $path = $this->addImage($request);
+            $path = $this->addImage_Post($request);
         }
         else {
             $path = null;
@@ -160,16 +161,16 @@ class ApiPostController extends Controller
         
         if ($postOriginal->imagen) { //si tenía imagen anteriormente
             if ($request->deleteImagen == 'true') { //si quiere eliminar la imagen vieja
-                $postOriginal = $this->removeImage($postOriginal); //borro la imagen del storage y del post
+                $postOriginal = $this->deleteImage_Post($postOriginal); //borro la imagen del storage y del post
                 
                 if ($request->hasFile('imagen')) { //si quiere agregar una nueva imagen
-                    $postOriginal->imagen = $this->addImage($request);
+                    $postOriginal->imagen = $this->addImage_Post($request);
                 }
             }
         }
         else { //si no tenía imagen anteriormente
             if ($request->hasFile('imagen')) { //si quiere agregar una nueva
-                $postOriginal->imagen = $this->addImage($request);
+                $postOriginal->imagen = $this->addImage_Post($request);
             }
         }
 
@@ -210,7 +211,7 @@ class ApiPostController extends Controller
         $post = Post::find($request->id);
 
         //borro la imagen del storage
-        $this->removeImage($post);
+        $this->deleteImage_Post($post);
 
         //elimino el registro con tal id
         Post::destroy($request->id);
@@ -221,23 +222,16 @@ class ApiPostController extends Controller
     }
 
     
-    //funcion que agrega una nueva imagen al storage y devuelve el path
-    public function addImage($request)
-    {
-        $path = $request->file('imagen')->store('public'); //almaceno la imagen
-        $path = substr($path, 7); //el path original es "public/img.jpg". Entonces le dejo solo: "img.jpg"
+    //Utilizo la clase Image para intanciar las funciones addImage y deleteImage
+    use Image;
 
-        return $path;
+    public function addImage_Post($request)
+    {
+        return $this->addImage($request);
     }
 
-
-    //funcion que borra la imagen del storage y del post
-    public function removeImage($post)
+    public function deleteImage_Post($post)
     {
-        unlink(storage_path('app/public/'.$post->imagen)); //borro la imagen del storage
-
-        $post->imagen = null; //borro la imagen del post
-
-        return $post;
+        return $this->deleteImage($post);
     }
 }
