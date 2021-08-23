@@ -153,7 +153,7 @@ class PostController extends Controller
         $postOriginal = Post::find($request->id);
         
         if ($postOriginal->imagen) { //si tenía imagen anteriormente
-            if ($request->deleteImagen) { //si quiere eliminar la imagen vieja
+            if ($request->deleteImagen == 'true') { //si quiere eliminar la imagen vieja
                 $postOriginal = $this->removeImage($postOriginal); //borro la imagen del storage y del post
                 
                 if ($request->hasFile('imagen')) { //si quiere agregar una nueva imagen
