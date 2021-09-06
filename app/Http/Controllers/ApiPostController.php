@@ -20,6 +20,9 @@ class ApiPostController extends Controller
         //cambio las fechas de formato
         foreach ($posts as $post) {
             $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
+            if ($post->modified) {
+                $post->modified = Carbon::parse($post->modified)->format('d-m-Y H:i:s');
+            }
         }
 
         return response()->json($posts);
