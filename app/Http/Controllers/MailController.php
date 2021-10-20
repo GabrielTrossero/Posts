@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreMailRequest;
 
 class MailController extends Controller
 {
@@ -15,8 +16,10 @@ class MailController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(StoreMailRequest $request)
     {
+        $correo = $request->validated();
+/*
         //mensajes de error que se mostraran por pantalla
         $messages = [
             'nombre.required' => 'Es necesario ingresar un Nombre.',
@@ -37,7 +40,7 @@ class MailController extends Controller
         //si la validacion falla vuelvo hacia atras con los errores
         if($validacion->fails()){
             return redirect()->back()->withInput()->withErrors($validacion->errors());
-        }
+        }*/
 
         //genero el correo y le paso los datos
         $correo = new ContactMail($request);
@@ -45,6 +48,7 @@ class MailController extends Controller
         //envío el correo
         Mail::to('gabrieltrosserogetr@gmail.com')->send($correo);
 
-        return redirect()->action('PostController@index')->with('alert', 'Correo enviado correctamente');
+        //return redirect()->action('PostController@index')->with('alert', 'Correo enviado correctamente');
+        return redirect(route('post.index'))->with('alert', 'Correo enviado correctamente correctamente');
     }
 }

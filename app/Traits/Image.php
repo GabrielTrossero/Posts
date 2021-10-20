@@ -19,6 +19,6 @@ trait Image {
 
         $post->imagen = null; //borro la imagen del post
 
-        return $post;
+        return null;
     }
 }

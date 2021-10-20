@@ -21,13 +21,6 @@
                             <input type="hidden" name="selectIsRequired" value="false">
                         @endif
 
-                        @if (Session::has('danger'))
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                {{ Session::get('danger') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-
                         <div class="form-floating mb-3 mx-5">
                             <input type="text" class="form-control" name="titulo" id="titulo" value="{{ old('titulo') ?? $post->titulo }}" placeholder="Ingrese Título" maxlength="150" required>
                             <label for="floatingInput">{{ __('Título') }}</label>

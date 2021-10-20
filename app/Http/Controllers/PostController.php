@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Traits\Image;
 use App\Models\Post;
 
@@ -35,52 +37,23 @@ class PostController extends Controller
     }
 
 
-    public function store(Request $request){
-        //mensajes de error que se mostraran por pantalla
-        $messages = [
-            'titulo.required' => 'Es necesario ingresar un Título.',
-            'titulo.max' => 'Es necesario ingresar un Título válido.',
-            'slug.required' => 'Es necesario ingresar un Slug.',
-            'slug.unique' => 'Ingrese un Slug válido. Ya existe un Post con dicho Slug.',
-            'slug.max' => 'Es necesario ingresar un Slug válido.',
-            'descripcion.required' => 'Es necesario ingresar una Descripción.',
-            'descripcion.max' => 'Ingrese una Descripción válida.',
-            'imagen.image' => "El archivo debe ser una Imagen."
-          ];
-  
-        //valido los datos ingresados
-        $validacion = Validator::make($request->all(), [
-            'titulo' => 'required|max:150',
-            'slug' => 'required|max:150|unique:post',
-            'descripcion' => 'required|max:10000',
-            'imagen' => 'image'
-        ], $messages);
+    public function store(StorePostRequest $request){
 
-        //si la validacion falla vuelvo hacia atras con los errores
-        if($validacion->fails()){
-            return redirect()->back()->withInput()->withErrors($validacion->errors());
-        }
+        $post = $request->validated();
 
-        //si ingresó imagen
         if ($request->hasFile('imagen')) {
-            $path = $this->addImage_Post($request);
+            $post['imagen'] = $this->addImage_Post($request);
         }
         else {
-            $path = null;
+            $post['imagen'] = null;
         }
 
-        //almaceno el post
-        $post = new Post();
-        $post->titulo = $request->titulo;
-        $post->slug = $request->slug;
-        $post->descripcion = $request->descripcion;
-        $post->imagen = $path;
-        $post->save();
+        Post::create($post);
 
         $postRetornado = Post::where('slug', $request->slug)->first();
 
         //redirijo para mostrar el post ingresado
-        return redirect()->action('PostController@getShowId', $postRetornado->slug)->with('alert', 'Post generado correctamente');;
+        return redirect(route('post.showId',['slug' => $postRetornado->slug]))->with('alert', 'Post generado correctamente');
     }
 
 
@@ -109,73 +82,35 @@ class PostController extends Controller
     }
 
 
-    public function update(Request $request){
-        //mensajes de error que se mostraran por pantalla
-        $messages = [
-            'id.required' => 'Es necesario ingresar el id.',
-            'id.exists' => 'El id ingresado es incorrecto.',
-            'titulo.required' => 'Es necesario ingresar un Título.',
-            'titulo.max' => 'Es necesario ingresar un Título válido.',
-            'slug.required' => 'Es necesario ingresar un Slug.',
-            'slug.unique' => 'Ingrese un Slug válido. Ya existe un Post con dicho Slug.',
-            'slug.max' => 'Es necesario ingresar un Slug válido.',
-            'descripcion.required' => 'Es necesario ingresar una Descripción.',
-            'descripcion.max' => 'Ingrese una Descripción válida.',
-            'deleteImagen.required' => 'Es necesario ingresar una opción.',
-            'deleteImagen.in' => 'Dicha opción no es válida.',
-            'imagen.image' => "El archivo debe ser una Imagen."
-          ];
-  
-        //valido los datos ingresados
-        $validacion = Validator::make($request->all(), [
-            'id' => 'required|exists:post',
-            'titulo' => 'required|max:150',
-            'slug' => [
-                'required',
-                'max:150',
-                Rule::unique('post')->ignore($request->id),
-              ],
-            'descripcion' => 'required|max:10000',
-            'deleteImagen' => 'required_if:selectIsRequired,==,true|in:true,false', //solo es required cuando había una imagen en el post
-            'imagen' => 'image'
-        ], $messages);
+    public function update(UpdatePostRequest $request){
 
-        //si la validacion falla con el id, vuelvo hacia atras
-        if($validacion->errors()->first('id')){
-            return redirect()->back()->with('danger', 'ERROR: El Post no se pudo actualizar');
-        }
-
-        //si la validacion falla con otro campo, vuelvo hacia atras con los errores
-        if($validacion->fails()){
-            return redirect()->back()->withInput()->withErrors($validacion->errors());
-        }
+        $post = $request->validated();
 
         $postOriginal = Post::find($request->id);
         
+        
         if ($postOriginal->imagen) { //si tenía imagen anteriormente
             if ($request->deleteImagen == 'true') { //si quiere eliminar la imagen vieja
-                $postOriginal = $this->deleteImage_Post($postOriginal); //borro la imagen del storage y del post
+                $post['imagen'] = $this->deleteImage_Post($postOriginal); //borro la imagen del storage y del post
                 
                 if ($request->hasFile('imagen')) { //si quiere agregar una nueva imagen
-                    $postOriginal->imagen = $this->addImage_Post($request);
+                    //$postOriginal->imagen = $this->addImage_Post($request);
+                    $post['imagen'] = $this->addImage_Post($request);
                 }
             }
         }
         else { //si no tenía imagen anteriormente
             if ($request->hasFile('imagen')) { //si quiere agregar una nueva
-                $postOriginal->imagen = $this->addImage_Post($request);
+                //$postOriginal->imagen = $this->addImage_Post($request);
+                $post['imagen'] = $this->addImage_Post($request);
             }
         }
 
-        //actualizo el post
-        $postOriginal->titulo = $request->titulo;
-        $postOriginal->slug = $request->slug;
-        $postOriginal->descripcion = $request->descripcion;
-        $postOriginal->save();
 
-
+        $postOriginal->update($post);
+        
         //redirijo para mostrar el post actualizado
-        return redirect()->action('PostController@getShowId', $request->slug)->with('alert', 'Post actualizado correctamente');
+        return redirect(route('post.showId',['slug' => $postOriginal->slug]))->with('alert', 'Post actualizado correctamente');
     }
 
 
