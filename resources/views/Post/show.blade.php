@@ -49,7 +49,8 @@
           </a>
           &nbsp;&nbsp;
           <form action="{{ url('/delete') }}" method="post" style="display:inline" onsubmit="return confirm('¿Está seguro que desea eliminar el Post?');">
-            {{ csrf_field() }}
+            @csrf
+            @method('delete')
             <input type="hidden" name="id" value="{{ $post->id }}">
             <button type="submit" class="btn btn-outline-danger" style="display:inline">
               Eliminar Post

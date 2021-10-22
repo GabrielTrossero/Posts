@@ -15,9 +15,12 @@ trait Image {
     //funcion que borra la imagen del storage y del post
     public function deleteImage($post)
     {
-        unlink(storage_path('app/public/'.$post->imagen)); //borro la imagen del storage
-
-        $post->imagen = null; //borro la imagen del post
+        //compruebo que tenga imagen
+        if($post->imagen){
+            unlink(storage_path('app/public/'.$post->imagen)); //borro la imagen del storage
+    
+            $post->imagen = null; //borro la imagen del post
+        }
 
         return null;
     }

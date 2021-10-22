@@ -34,7 +34,7 @@ class UpdatePostRequest extends FormRequest
                 Rule::unique('post')->ignore($this->id),
               ],
             'descripcion' => 'required|max:10000',
-            'deleteImagen' => 'required_if:selectIsRequired,==,true|in:true,false', //solo es required cuando había una imagen en el post
+            'deleteImagen' => 'in:true,false',
             'imagen' => 'image'
         ];
     }

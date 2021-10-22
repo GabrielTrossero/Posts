@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group([
     'prefix' => 'post'
 ], function () {
-    Route::get('list', 'ApiPostController@list');
-    Route::post('create', 'ApiPostController@create');
-    Route::post('update', 'ApiPostController@update');
-    Route::post('destroy', 'ApiPostController@destroy');
+    Route::get('list', [ApiPostController::class, 'list'])->name('api.list');
+    Route::post('create', [ApiPostController::class, 'create'])->name('api.create');
+    Route::put('update', [ApiPostController::class, 'update'])->name('api.update');
+    Route::delete('destroy', [ApiPostController::class, 'destroy'])->name('api.destroy');
 });
 

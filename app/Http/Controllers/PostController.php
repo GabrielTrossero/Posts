@@ -90,18 +90,16 @@ class PostController extends Controller
         
         
         if ($postOriginal->imagen) { //si tenía imagen anteriormente
-            if ($request->deleteImagen == 'true') { //si quiere eliminar la imagen vieja
+            if ($post['deleteImagen'] == 'true') { //si quiere eliminar la imagen vieja
                 $post['imagen'] = $this->deleteImage_Post($postOriginal); //borro la imagen del storage y del post
                 
                 if ($request->hasFile('imagen')) { //si quiere agregar una nueva imagen
-                    //$postOriginal->imagen = $this->addImage_Post($request);
                     $post['imagen'] = $this->addImage_Post($request);
                 }
             }
         }
         else { //si no tenía imagen anteriormente
             if ($request->hasFile('imagen')) { //si quiere agregar una nueva
-                //$postOriginal->imagen = $this->addImage_Post($request);
                 $post['imagen'] = $this->addImage_Post($request);
             }
         }

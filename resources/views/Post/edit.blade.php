@@ -10,7 +10,8 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ url('/edit') }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                        @csrf
+                        @method('PUT')  
 
                         <input type="hidden" name="id" value="{{ $post->id }}">
 
