@@ -20,11 +20,6 @@ class PostController extends Controller
         //busco todos los post
         $posts = Post::all();
 
-        //cambio las fechas de formato
-        foreach ($posts as $post) {
-            $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
-        }
-
         //redirijo a la vista para listar todos los post pasandole el array "post"
         return view('post.index' , compact('posts'));
     }
@@ -62,11 +57,6 @@ class PostController extends Controller
         //busco el post
         $post = Post::where('slug', $slug)->first();
 
-        //cambio las fechas de formato
-        $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
-        if ($post->modified) {
-            $post->modified = Carbon::parse($post->modified)->format('d-m-Y H:i:s');
-        }
         //redirijo a la vista individual con los datos del post
         return view('post.show' , ['post' => $post]);
     }
