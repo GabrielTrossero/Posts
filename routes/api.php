@@ -24,6 +24,7 @@ Route::group([
     'prefix' => 'post'
 ], function () {
     Route::get('list', [ApiPostController::class, 'list'])->name('api.list');
+    Route::post('showId', [ApiPostController::class, 'showId'])->name('api.showId');
     Route::post('create', [ApiPostController::class, 'create'])->name('api.create');
     Route::put('update', [ApiPostController::class, 'update'])->name('api.update');
     Route::delete('destroy', [ApiPostController::class, 'destroy'])->name('api.destroy');

@@ -16,4 +16,12 @@ class Post extends Model
     protected $fillable = [
         'titulo', 'slug', 'descripcion', 'imagen', 'created', 'modified'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     * Nota: esto para que ande PostResource con el formato de la fechas
+     *
+     * @var array
+     */
+    protected $dates = ['created', 'modified'];
 }

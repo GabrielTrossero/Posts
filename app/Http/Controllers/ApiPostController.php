@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\PostCollection;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Traits\Image;
@@ -16,18 +18,12 @@ class ApiPostController extends Controller
 {
     public function list()
     {
-        //busco todos los post
-        $posts = Post::all();
+        return response()->json(new PostCollection(Post::all()));
+    }
 
-        //cambio las fechas de formato
-        foreach ($posts as $post) {
-            $post->created = Carbon::parse($post->created)->format('d-m-Y H:i:s');
-            if ($post->modified) {
-                $post->modified = Carbon::parse($post->modified)->format('d-m-Y H:i:s');
-            }
-        }
-
-        return response()->json($posts);
+    public function showId(Request $request)
+    {
+        return response()->json(new PostResource(Post::where('slug', $request->slug)->first()));
     }
 
 
